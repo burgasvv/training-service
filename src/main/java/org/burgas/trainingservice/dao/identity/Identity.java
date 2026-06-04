@@ -6,8 +6,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.burgas.trainingservice.dao.Dao;
+import org.burgas.trainingservice.dao.file.File;
 import org.burgas.trainingservice.dao.image.Image;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -51,4 +54,16 @@ public class Identity implements Dao {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "image_id", referencedColumnName = "id")
     private Image image;
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "identity_file",
+            joinColumns = {
+                    @JoinColumn(name = "identity_id", referencedColumnName = "id")
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "file_id", referencedColumnName = "id")
+            }
+    )
+    private Set<File> files = new HashSet<>();
 }
