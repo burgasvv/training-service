@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.burgas.trainingservice.dao.Dao;
 import org.burgas.trainingservice.dao.course.Course;
 import org.burgas.trainingservice.dao.file.File;
 
@@ -38,7 +39,7 @@ import java.util.UUID;
                 )
         }
 )
-public class Project {
+public class Project implements Dao {
 
     @Id
     @Column(name = "id")
