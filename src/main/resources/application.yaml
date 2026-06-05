@@ -1,6 +1,8 @@
 
 server:
   port: 9000
+  tomcat:
+    max-swallow-size: -1
 spring:
   application:
     name: training-service
@@ -27,8 +29,8 @@ spring:
         highlight_sql: true
   servlet:
     multipart:
-      max-file-size: 500MB
-      max-request-size: 1000MB
+      max-file-size: 10000000000MB
+      max-request-size: 100000000000MB
   data:
     redis:
       port: 6000

@@ -9,5 +9,5 @@ public interface FileService<ID, F extends File> {
 
     F upload(Part part);
 
-    void remove(ID id);
+    void remove(F file);
 }

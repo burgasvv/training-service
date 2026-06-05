@@ -9,5 +9,5 @@ public interface ImageService<ID, I extends Image> {
 
     I upload(Part part);
 
-    void remove(ID id);
+    void remove(I image);
 }

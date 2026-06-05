@@ -47,8 +47,7 @@ public class ImageServiceImpl implements ImageService<UUID, Image> {
             isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED,
             rollbackFor = {Exception.class, Throwable.class, RuntimeException.class}
     )
-    public void remove(UUID id) {
-        Image image = findEntity(id);
+    public void remove(Image image) {
         imageRepository.delete(image);
     }
 }

@@ -18,7 +18,7 @@ import java.util.UUID;
 @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 public class FileServiceImpl implements FileService<UUID, File> {
 
-    private final FileRepository fileRepository;
+    public final FileRepository fileRepository;
 
     @Override
     public File findEntity(UUID id) {
@@ -46,8 +46,7 @@ public class FileServiceImpl implements FileService<UUID, File> {
             isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED,
             rollbackFor = {Exception.class, Throwable.class, RuntimeException.class}
     )
-    public void remove(UUID id) {
-        File file = findEntity(id);
+    public void remove(File file) {
         fileRepository.delete(file);
     }
 }
