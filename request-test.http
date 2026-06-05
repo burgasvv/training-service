@@ -46,6 +46,24 @@ X-Csrf-Token: 2wkOyNGfFWXklgVeodLduMuDMa0BWBN9QSi9ncICy4NoEbQO7zFq_uanIlXJpzM7lP
 }
 
 ###
+POST /api/v1/identities/create
+Host: localhost:9000
+Accept: application/json
+Content-Type: application/json
+X-Csrf-Token: noBydo5WtKLr9QhHSAswEDayuubb_P7VahVVmobHjYuhhIbU_LdATuhn0MTGxG5-cCYEIQPUl4Tjmcj4XHNh_rD37rOSveTg
+
+{
+    "authority": "USER",
+    "email": "zagor@gmail.com",
+    "password": "zagor",
+    "status": true,
+    "firstname": "Загорулько",
+    "lastname": "Борис",
+    "patronymic": "Юрьевич",
+    "about": "Коротко о личности Загорулько Бориса Юрьевича"
+}
+
+###
 POST /api/v1/identities/update
 Host: localhost:9000
 Accept: application/json

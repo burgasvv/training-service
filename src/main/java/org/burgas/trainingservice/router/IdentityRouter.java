@@ -6,6 +6,7 @@ import org.burgas.trainingservice.dto.exception.ExceptionResponse;
 import org.burgas.trainingservice.dto.file.FileRequest;
 import org.burgas.trainingservice.dto.identity.IdentityRequest;
 import org.burgas.trainingservice.dto.identity.IdentityResponse;
+import org.burgas.trainingservice.filter.IdentityFilter;
 import org.burgas.trainingservice.service.IdentityService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,9 +24,11 @@ import java.util.UUID;
 public class IdentityRouter {
 
     @Bean
-    public RouterFunction<ServerResponse> identityRouting(IdentityService identityService) {
+    public RouterFunction<ServerResponse> identityRouting(IdentityService identityService, IdentityFilter identityFilter) {
         return RouterFunctions.route()
                 .path("/api/v1/identities", builder -> builder
+
+                        .filter(identityFilter)
 
                         .GET("", _ -> ServerResponse.ok().body(identityService.findAll()))
 
