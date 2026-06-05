@@ -36,11 +36,8 @@ public class IdentityRouter {
 
                         .POST("/create", request -> {
                             IdentityRequest identityRequest = request.body(IdentityRequest.class);
-                            IdentityResponse identityResponse = identityService.create(identityRequest);
-                            return ServerResponse
-                                    .status(HttpStatus.FOUND)
-                                    .location(URI.create("/api/v1/identities/by-id?identityId=" + identityResponse.getId()))
-                                    .build();
+                            identityService.create(identityRequest);
+                            return ServerResponse.ok().build();
                         })
 
                         .POST("/update", request -> {
@@ -61,6 +58,7 @@ public class IdentityRouter {
                         .POST("/upload-image", request -> {
                             UUID identityId = UUID.fromString(request.param("identityId").orElseThrow());
                             Part part = request.multipartData().getFirst("image");
+                            assert part != null;
                             identityService.uploadImage(identityId, part);
                             return ServerResponse.ok().build();
                         })

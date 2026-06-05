@@ -5,6 +5,7 @@ import org.burgas.trainingservice.dao.course.Course;
 import org.burgas.trainingservice.dto.course.CourseDependency;
 import org.burgas.trainingservice.dto.course.CourseRequest;
 import org.burgas.trainingservice.dto.course.CourseResponse;
+import org.burgas.trainingservice.mapper.contract.Mapper;
 import org.burgas.trainingservice.repository.CourseRepository;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.stereotype.Component;

@@ -1,6 +1,28 @@
 
 
 
+### Security Requests
+
+
+
+###
+GET /api/v1/security/csrf-token
+Host: localhost:9000
+Accept: application/json
+
+###
+GET /api/v1/security/login
+Host: localhost:9000
+Accept: text/plain
+Authorization: Basic burgasvv@gmail.com burgasvv
+
+###
+GET /api/v1/security/logout
+Host: localhost:9000
+Accept: text/plain
+
+
+
 ### Identity Requests
 
 
@@ -10,6 +32,7 @@ POST /api/v1/identities/create
 Host: localhost:9000
 Accept: application/json
 Content-Type: application/json
+X-Csrf-Token: 2wkOyNGfFWXklgVeodLduMuDMa0BWBN9QSi9ncICy4NoEbQO7zFq_uanIlXJpzM7lP_piK-0HJUyPHVQJR3Yr_Bn_bRZddA6
 
 {
     "authority": "ADMIN",
@@ -27,9 +50,10 @@ POST /api/v1/identities/update
 Host: localhost:9000
 Accept: application/json
 Content-Type: application/json
+X-Csrf-Token: dMZpBpy7dXryX9AXRrUo0EDcbPsq2PoRF2yKemslACuRaO3-QP4NMKuDQkrfbuZyc5gc4CTrQcMZvJw8c1nvSFlANhygDInK
 
 {
-    "id": "391a9307-707f-4a5f-999b-5897df571d6a",
+    "id": "765b8d61-8299-4a54-8b59-fe21b6ce7532",
     "about": "Коротко о личности Бургаса Вячеслава Васильевича"
 }
 
@@ -39,7 +63,7 @@ Host: localhost:9000
 Accept: application/json
 
 ###
-GET /api/v1/identities/by-id?identityId=c02e6ae4-ea00-49ca-85a3-f957f6c783cc
+GET /api/v1/identities/by-id?identityId=765b8d61-8299-4a54-8b59-fe21b6ce7532
 Host: localhost:9000
 Accept: application/json
 

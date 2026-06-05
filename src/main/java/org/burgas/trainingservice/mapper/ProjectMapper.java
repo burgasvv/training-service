@@ -6,6 +6,7 @@ import org.burgas.trainingservice.dao.project.Project;
 import org.burgas.trainingservice.dto.project.ProjectDependency;
 import org.burgas.trainingservice.dto.project.ProjectRequest;
 import org.burgas.trainingservice.dto.project.ProjectResponse;
+import org.burgas.trainingservice.mapper.contract.Mapper;
 import org.burgas.trainingservice.repository.ProjectRepository;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.stereotype.Component;

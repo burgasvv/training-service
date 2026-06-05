@@ -20,4 +20,6 @@ public interface IdentityRepository extends JpaRepository<Identity, UUID> {
     @Override
     @EntityGraph(value = "identity-entity-graph", type = EntityGraph.EntityGraphType.FETCH)
     @NonNull List<Identity> findAll();
+
+    Optional<Identity> findIdentityByEmail(String email);
 }

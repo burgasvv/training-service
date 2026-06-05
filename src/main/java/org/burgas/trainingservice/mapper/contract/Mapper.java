@@ -1,4 +1,4 @@
-package org.burgas.trainingservice.mapper;
+package org.burgas.trainingservice.mapper.contract;
 
 import org.burgas.trainingservice.dao.Dao;
 import org.burgas.trainingservice.dto.Dependency;
@@ -14,11 +14,11 @@ public interface Mapper<Req extends Request, Ent extends Dao, Dep extends Depend
     Res toResponse(Ent entity);
 
     default <D> D handleData(D requestData, D entityData) {
-        return requestData == null ? entityData : requestData;
+        return requestData == null || requestData == "" ? entityData : requestData;
     }
 
     default <D> D handleDataException(D requestData, String message) {
-        if (requestData == null) throw new IllegalArgumentException(message);
+        if (requestData == null || requestData == "") throw new IllegalArgumentException(message);
         return requestData;
     }
 }
