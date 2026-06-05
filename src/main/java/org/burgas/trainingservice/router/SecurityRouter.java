@@ -7,11 +7,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.servlet.function.RouterFunction;
 import org.springframework.web.servlet.function.RouterFunctions;
 import org.springframework.web.servlet.function.ServerResponse;
+
+import java.util.Objects;
 
 @Configuration
 @RequiredArgsConstructor
@@ -27,10 +30,10 @@ public class SecurityRouter {
                             return ServerResponse.ok().body(csrfToken);
                         })
 
-                        .GET("/login", request -> {
-                            Authentication authentication = (Authentication) request.principal().orElseThrow();
-                            if (authentication.isAuthenticated()) {
-                                return ServerResponse.ok().body("You successfully authenticated");
+                        .GET("/login", _ -> {
+                            SecurityContext securityContext = SecurityContextHolder.getContext();
+                            if (Objects.requireNonNull(securityContext.getAuthentication()).isAuthenticated()) {
+                                return ServerResponse.ok().body("You successfully logged in");
                             } else {
                                 throw new IllegalArgumentException("Not authenticated");
                             }
@@ -46,7 +49,7 @@ public class SecurityRouter {
                                 session.removeAttribute("SPRING_SECURITY_CONTEXT");
                                 return ServerResponse.ok().body("You successfully logged out");
                             } else {
-                                return ServerResponse.ok().body("You already logged out");
+                                return ServerResponse.ok().body("You are not authenticated for logout");
                             }
                         })
 
