@@ -85,6 +85,18 @@ public class IdentityRouter {
                             return ServerResponse.ok().build();
                         })
 
+                        .PUT("/change-password", request -> {
+                            IdentityRequest identityRequest = request.body(IdentityRequest.class);
+                            identityService.changePassword(identityRequest);
+                            return ServerResponse.ok().build();
+                        })
+
+                        .PUT("/change-status", request -> {
+                            IdentityRequest identityRequest = request.body(IdentityRequest.class);
+                            identityService.changeStatus(identityRequest);
+                            return ServerResponse.ok().build();
+                        })
+
                         .onError(Exception.class, (throwable, _) -> {
                             var exceptionResponse = ExceptionResponse.builder()
                                     .status(HttpStatus.BAD_REQUEST.name())

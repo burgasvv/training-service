@@ -70,3 +70,14 @@ Accept: application/json
 ###
 DELETE /api/v1/identities/delete?identityId=391a9307-707f-4a5f-999b-5897df571d6a
 Host: localhost:9000
+
+###
+PUT /api/v1/identities/change-password
+Host: localhost:9000
+Content-Type: application/json
+X-Csrf-Token: d1TMnZSQzVnMS7XtDX5ApuZw4cxt9glkyH3-gi8AmgB8DARSFmH4-_L2qWjhe9bZOVN0ldUSzK4OkD9J-hnNsxxl_DZJPzJg
+
+{
+    "id": "765b8d61-8299-4a54-8b59-fe21b6ce7532",
+    "password": "burgasvv"
+}

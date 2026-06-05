@@ -18,6 +18,7 @@ import org.burgas.trainingservice.service.contract.DesignService;
 import org.burgas.trainingservice.service.contract.FindService;
 import org.burgas.trainingservice.service.contract.ModifyService;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -39,6 +40,7 @@ public class IdentityService implements CacheHandler<Identity>,  FindService<UUI
     private final ImageServiceImpl imageService;
     private final FileServiceImpl fileService;
     private final FileRepository fileRepository;
+    private final PasswordEncoder passwordEncoder;
 
     private final RedisTemplate<String, IdentityResponse> identityRedisTemplate;
     private final RedisTemplate<String, CourseResponse> courseRedisTemplate;
@@ -184,6 +186,39 @@ public class IdentityService implements CacheHandler<Identity>,  FindService<UUI
             handleCache(identity);
         } else {
             throw new IllegalArgumentException("Identity files not contains input file ids");
+        }
+    }
+
+    @Transactional(
+            isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED,
+            rollbackFor = {Exception.class, Throwable.class, RuntimeException.class}
+    )
+    public void changePassword(IdentityRequest identityRequest) {
+        if (identityRequest.getId() == null) throw new IllegalArgumentException("Request identity id is null");
+        if (identityRequest.getPassword() == null || identityRequest.getPassword().isEmpty())
+            throw new IllegalArgumentException("Identity password is null");
+        Identity identity = findEntity(identityRequest.getId());
+        if (!passwordEncoder.matches(identityRequest.getPassword(), identity.getPassword())) {
+            identity.setPassword(passwordEncoder.encode(identityRequest.getPassword()));
+            handleCache(identity);
+        } else {
+            throw new IllegalArgumentException("Passwords matched");
+        }
+    }
+
+    @Transactional(
+            isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED,
+            rollbackFor = {Exception.class, Throwable.class, RuntimeException.class}
+    )
+    public void changeStatus(IdentityRequest identityRequest) {
+        if (identityRequest.getId() == null) throw new IllegalArgumentException("Request identity id is null");
+        if (identityRequest.getStatus() == null) throw new IllegalArgumentException("Request identity status is null");
+        Identity identity = findEntity(identityRequest.getId());
+        if (!identity.getStatus().equals(identityRequest.getStatus())) {
+            identity.setStatus(identityRequest.getStatus());
+            handleCache(identity);
+        } else {
+            throw new IllegalArgumentException("Statuses matched");
         }
     }
 }
