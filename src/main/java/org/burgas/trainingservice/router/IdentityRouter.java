@@ -52,7 +52,9 @@ public class IdentityRouter {
                         .DELETE("/delete", request -> {
                             UUID identityId = UUID.fromString(request.param("identityId").orElseThrow());
                             identityService.delete(identityId);
-                            return ServerResponse.noContent().build();
+                            return ServerResponse.status(HttpStatus.FOUND)
+                                    .location(URI.create("/api/v1/security/logout"))
+                                    .build();
                         })
 
                         .POST("/upload-image", request -> {
