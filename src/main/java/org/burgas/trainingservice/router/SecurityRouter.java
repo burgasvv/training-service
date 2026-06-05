@@ -43,7 +43,7 @@ public class SecurityRouter {
                                 authentication.setAuthenticated(false);
                                 SecurityContextHolder.clearContext();
                                 HttpSession session = request.session();
-                                session.invalidate();
+                                session.removeAttribute("SPRING_SECURITY_CONTEXT");
                                 return ServerResponse.ok().body("You successfully logged out");
                             } else {
                                 return ServerResponse.ok().body("You already logged out");
