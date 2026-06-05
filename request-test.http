@@ -1,0 +1,48 @@
+
+
+
+### Identity Requests
+
+
+
+###
+POST /api/v1/identities/create
+Host: localhost:9000
+Accept: application/json
+Content-Type: application/json
+
+{
+    "authority": "ADMIN",
+    "email": "burgasvv@gmail.com",
+    "password": "burgasvv",
+    "status": true,
+    "firstname": "Бургас",
+    "lastname": "Вячеслав",
+    "patronymic": "Васильевич",
+    "about": "Коротко о личности"
+}
+
+###
+POST /api/v1/identities/update
+Host: localhost:9000
+Accept: application/json
+Content-Type: application/json
+
+{
+    "id": "391a9307-707f-4a5f-999b-5897df571d6a",
+    "about": "Коротко о личности Бургаса Вячеслава Васильевича"
+}
+
+###
+GET /api/v1/identities
+Host: localhost:9000
+Accept: application/json
+
+###
+GET /api/v1/identities/by-id?identityId=391a9307-707f-4a5f-999b-5897df571d6a
+Host: localhost:9000
+Accept: application/json
+
+###
+DELETE /api/v1/identities/delete?identityId=391a9307-707f-4a5f-999b-5897df571d6a
+Host: localhost:9000

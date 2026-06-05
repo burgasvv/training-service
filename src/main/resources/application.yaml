@@ -29,6 +29,16 @@ spring:
     multipart:
       max-file-size: 500MB
       max-request-size: 1000MB
+  data:
+    redis:
+      port: 6000
+      host: 'localhost'
+      database: 0
+      lettuce:
+        pool:
+          max-active: 8
+          min-idle: 0
+          max-idle: 8
 logging:
   level:
     org.springframework.transaction.interceptor: TRACE
