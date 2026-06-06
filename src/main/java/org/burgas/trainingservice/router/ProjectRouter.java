@@ -3,6 +3,7 @@ package org.burgas.trainingservice.router;
 import org.burgas.trainingservice.dto.exception.ExceptionResponse;
 import org.burgas.trainingservice.dto.project.ProjectRequest;
 import org.burgas.trainingservice.dto.project.ProjectResponse;
+import org.burgas.trainingservice.filter.ProjectFilter;
 import org.burgas.trainingservice.service.ProjectService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,9 +19,11 @@ import java.util.UUID;
 public class ProjectRouter {
 
     @Bean
-    public RouterFunction<ServerResponse> projectRouting(ProjectService projectService) {
+    public RouterFunction<ServerResponse> projectRouting(ProjectService projectService, ProjectFilter projectFilter) {
         return RouterFunctions.route()
                 .path("/api/v1/projects", builder -> builder
+
+                        .filter(projectFilter)
 
                         .GET("/by-id", request -> {
                             UUID projectId = UUID.fromString(request.param("projectId").orElseThrow());

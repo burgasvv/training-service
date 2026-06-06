@@ -44,7 +44,7 @@ public class IdentityRouter {
                         })
 
                         .POST("/update", request -> {
-                            IdentityRequest identityRequest = request.body(IdentityRequest.class);
+                            IdentityRequest identityRequest = (IdentityRequest) request.attribute("identityRequest").orElseThrow();
                             IdentityResponse identityResponse = identityService.update(identityRequest);
                             return ServerResponse
                                     .status(HttpStatus.FOUND)
@@ -89,7 +89,7 @@ public class IdentityRouter {
                         })
 
                         .PUT("/change-password", request -> {
-                            IdentityRequest identityRequest = request.body(IdentityRequest.class);
+                            IdentityRequest identityRequest = (IdentityRequest) request.attribute("identityRequest").orElseThrow();
                             identityService.changePassword(identityRequest);
                             return ServerResponse.ok().build();
                         })

@@ -66,6 +66,7 @@ public class IdentityFilter implements HandlerFilterFunction<ServerResponse, Ser
 
                 assert identityDetails != null;
                 if (identityDetails.identity().getId().equals(identityRequest.getId())) {
+                    request.attributes().put("identityRequest", identityRequest);
                     return next.handle(request);
 
                 } else {

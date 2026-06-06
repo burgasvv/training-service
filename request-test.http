@@ -14,7 +14,7 @@ Accept: application/json
 GET /api/v1/security/login
 Host: localhost:9000
 Accept: text/plain
-Authorization: Basic zagor@gmail.com zagor
+Authorization: Basic burgasvv@gmail.com burgasvv
 
 ###
 GET /api/v1/security/logout
@@ -150,3 +150,27 @@ Accept: application/json
 DELETE /api/v1/courses/delete?courseId=45be50de-743b-443f-b829-95ef7e11149f
 Host: localhost:9000
 X-Csrf-Token: yRN3Ts59uoDbqhBCdtdUqZWPnn7x7hu17k59pT1sa-g9P1BwqnVGe_4c3rH2nCZ3EPpgnPG6sxyX2y-Y330clllZXNsLBmZG
+
+
+
+### Project Requests
+
+
+
+###
+POST /api/v1/projects/create
+Host: localhost:9000
+Accept: application/json
+Content-Type: application/json
+X-Csrf-Token: auMwfdsuJspN1hLgQPfPxat5Gbjz0pA8bwMcUpzPTPafggzuXtEGSegWFK9g4nOGctr7_chPNNmRsPYRXjEqNvn6ecb74DXb
+
+{
+    "name": "First Java Project",
+    "description": "Описание первого проекта First Java Project",
+    "courseId": "8efdfbac-88b5-4b79-86c6-b10f04bf45e0"
+}
+
+###
+GET /api/v1/projects/by-id?projectId=11222039-4e65-4c80-a81f-ab2640394efc
+Host: localhost:9000
+Accept: application/json
