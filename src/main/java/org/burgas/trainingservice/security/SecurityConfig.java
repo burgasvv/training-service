@@ -56,12 +56,17 @@ public class SecurityConfig {
                                 "/api/v1/identities/by-id", "/api/v1/identities/update", "/api/v1/identities/delete",
                                 "/api/v1/identities/upload-image", "/api/v1/identities/remove-image",
                                 "/api/v1/identities/upload-files", "/api/v1/identities/remove-files",
-                                "/api/v1/identities/change-password"
+                                "/api/v1/identities/change-password", "/api/v1/identities/add-course",
+                                "/api/v1/identities/remove-course",
+
+                                "/api/v1/courses/by-id", "/api/v1/courses"
                         )
                         .hasAnyAuthority("ADMIN", "USER")
 
                         .requestMatchers(
-                                "/api/v1/identities", "/api/v1/identities/change-status"
+                                "/api/v1/identities", "/api/v1/identities/change-status",
+
+                                "/api/v1/courses/create", "/api/v1/courses/update", "/api/v1/courses/delete"
                         )
                         .hasAnyAuthority("ADMIN")
                 )

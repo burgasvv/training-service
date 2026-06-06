@@ -1,17 +1,15 @@
 package org.burgas.trainingservice.dao.project;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.burgas.trainingservice.dao.Dao;
 import org.burgas.trainingservice.dao.course.Course;
 import org.burgas.trainingservice.dao.file.File;
 
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Builder
 @NoArgsConstructor

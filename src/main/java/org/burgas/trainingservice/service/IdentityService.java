@@ -41,6 +41,7 @@ public class IdentityService implements CacheHandler<Identity>,  FindService<UUI
     private final FileServiceImpl fileService;
     private final FileRepository fileRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CourseService courseService;
 
     private final RedisTemplate<String, IdentityResponse> identityRedisTemplate;
     private final RedisTemplate<String, CourseResponse> courseRedisTemplate;
@@ -219,6 +220,38 @@ public class IdentityService implements CacheHandler<Identity>,  FindService<UUI
             handleCache(identity);
         } else {
             throw new IllegalArgumentException("Statuses matched");
+        }
+    }
+
+    @Transactional(
+            isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED,
+            rollbackFor = {Exception.class, Throwable.class, RuntimeException.class}
+    )
+    public void addCourse(UUID identityId, UUID courseId) {
+        Identity identity = findEntity(identityId);
+        Course course = courseService.findEntity(courseId);
+        Set<UUID> identityCourseIds = identity.getCourses().parallelStream().map(Course::getId).collect(Collectors.toSet());
+        if (!identityCourseIds.contains(course.getId())) {
+            identity.addCourse(course);
+            handleCache(identity);
+        } else {
+            throw new IllegalArgumentException("Identity already subscribed on course");
+        }
+    }
+
+    @Transactional(
+            isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED,
+            rollbackFor = {Exception.class, Throwable.class, RuntimeException.class}
+    )
+    public void removeCourse(UUID identityId, UUID courseId) {
+        Identity identity = findEntity(identityId);
+        Course course = courseService.findEntity(courseId);
+        Set<UUID> identityCourseIds = identity.getCourses().parallelStream().map(Course::getId).collect(Collectors.toSet());
+        if (identityCourseIds.contains(course.getId())) {
+            identity.removeCourse(course);
+            handleCache(identity);
+        } else {
+            throw new IllegalArgumentException("Identity not subscribed on course for remove");
         }
     }
 }

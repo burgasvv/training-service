@@ -1,21 +1,18 @@
 package org.burgas.trainingservice.dao.identity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.burgas.trainingservice.dao.Dao;
 import org.burgas.trainingservice.dao.course.Course;
 import org.burgas.trainingservice.dao.file.File;
 import org.burgas.trainingservice.dao.image.Image;
 
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Builder
 @NoArgsConstructor
@@ -106,5 +103,10 @@ public class Identity implements Dao {
     public void addCourse(Course course) {
         this.courses.add(course);
         course.getIdentities().add(this);
+    }
+
+    public void removeCourse(Course course) {
+        this.courses.remove(course);
+        course.getIdentities().remove(this);
     }
 }

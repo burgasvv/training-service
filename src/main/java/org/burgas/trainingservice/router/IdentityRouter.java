@@ -100,6 +100,20 @@ public class IdentityRouter {
                             return ServerResponse.ok().build();
                         })
 
+                        .PUT("/add-course", request -> {
+                            UUID identityId = UUID.fromString(request.param("identityId").orElseThrow());
+                            UUID courseId = UUID.fromString(request.param("courseId").orElseThrow());
+                            identityService.addCourse(identityId, courseId);
+                            return ServerResponse.ok().build();
+                        })
+
+                        .PUT("/remove-course", request -> {
+                            UUID identityId = UUID.fromString(request.param("identityId").orElseThrow());
+                            UUID courseId = UUID.fromString(request.param("courseId").orElseThrow());
+                            identityService.removeCourse(identityId, courseId);
+                            return ServerResponse.ok().build();
+                        })
+
                         .onError(Exception.class, (throwable, _) -> {
                             var exceptionResponse = ExceptionResponse.builder()
                                     .status(HttpStatus.BAD_REQUEST.name())

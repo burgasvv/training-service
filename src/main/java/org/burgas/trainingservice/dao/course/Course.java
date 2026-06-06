@@ -1,10 +1,7 @@
 package org.burgas.trainingservice.dao.course;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.burgas.trainingservice.dao.Dao;
 import org.burgas.trainingservice.dao.identity.Identity;
 import org.burgas.trainingservice.dao.project.Project;
@@ -13,7 +10,8 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Builder
 @NoArgsConstructor
@@ -60,6 +58,11 @@ public class Course implements Dao {
     public void addIdentity(Identity identity) {
         this.identities.add(identity);
         identity.getCourses().add(this);
+    }
+
+    public void removeIdentity(Identity identity) {
+        this.identities.remove(identity);
+        identity.getCourses().remove(this);
     }
 
     @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)

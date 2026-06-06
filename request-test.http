@@ -14,7 +14,7 @@ Accept: application/json
 GET /api/v1/security/login
 Host: localhost:9000
 Accept: text/plain
-Authorization: Basic burgasvv@gmail.com burgasvv
+Authorization: Basic zagor@gmail.com zagor
 
 ###
 GET /api/v1/security/logout
@@ -99,3 +99,54 @@ X-Csrf-Token: d1TMnZSQzVnMS7XtDX5ApuZw4cxt9glkyH3-gi8AmgB8DARSFmH4-_L2qWjhe9bZOV
     "id": "765b8d61-8299-4a54-8b59-fe21b6ce7532",
     "password": "burgasvv"
 }
+
+###
+PUT /api/v1/identities/add-course?identityId=8a00a975-7f7e-469d-91fd-98fb4e217d84&courseId=8efdfbac-88b5-4b79-86c6-b10f04bf45e0
+Host: localhost:9000
+Accept: application/json
+X-Csrf-Token: R3-Qkn1Zrl9GTAWheCjP6xG24w7OsxoqY13_HBfsDreW35DKJBmhp004ym5rejOUHgX73nWDzmyohi4HUm6eL3PZOYSg5qb8
+
+
+
+### Course Requests
+
+
+
+###
+POST /api/v1/courses/create
+Host: localhost:9000
+Accept: application/json
+Content-Type: application/json
+X-Csrf-Token: yRN3Ts59uoDbqhBCdtdUqZWPnn7x7hu17k59pT1sa-g9P1BwqnVGe_4c3rH2nCZ3EPpgnPG6sxyX2y-Y330clllZXNsLBmZG
+
+{
+    "name": "Java Course",
+    "description": "Описание курса Java Course"
+}
+
+###
+POST /api/v1/courses/update
+Host: localhost:9000
+Accept: application/json
+Content-Type: application/json
+X-Csrf-Token: yRN3Ts59uoDbqhBCdtdUqZWPnn7x7hu17k59pT1sa-g9P1BwqnVGe_4c3rH2nCZ3EPpgnPG6sxyX2y-Y330clllZXNsLBmZG
+
+{
+    "id": "45be50de-743b-443f-b829-95ef7e11149f",
+    "description": "Описание курса Java Course для студентов"
+}
+
+###
+GET /api/v1/courses
+Host: localhost:9000
+Accept: application/json
+
+###
+GET /api/v1/courses/by-id?courseId=8efdfbac-88b5-4b79-86c6-b10f04bf45e0
+Host: localhost:9000
+Accept: application/json
+
+###
+DELETE /api/v1/courses/delete?courseId=45be50de-743b-443f-b829-95ef7e11149f
+Host: localhost:9000
+X-Csrf-Token: yRN3Ts59uoDbqhBCdtdUqZWPnn7x7hu17k59pT1sa-g9P1BwqnVGe_4c3rH2nCZ3EPpgnPG6sxyX2y-Y330clllZXNsLBmZG

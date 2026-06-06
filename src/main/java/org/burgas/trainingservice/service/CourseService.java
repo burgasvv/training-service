@@ -17,6 +17,7 @@ import org.burgas.trainingservice.service.contract.FindService;
 import org.burgas.trainingservice.service.contract.ModifyService;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,7 +68,14 @@ public class CourseService implements CacheHandler<Course>, CollectService<Cours
 
     @Override
     public CourseResponse findById(UUID uuid) {
-        return null;
+        String courseKey = String.format(RedisKeys.courseKey, uuid);
+        if (courseRedisTemplate.hasKey(courseKey)) {
+            return courseRedisTemplate.opsForValue().get(courseKey);
+        } else {
+            CourseResponse courseResponse = courseMapper.toResponse(findEntity(uuid));
+            courseRedisTemplate.opsForValue().set(courseKey, courseResponse);
+            return courseResponse;
+        }
     }
 
     @Override
@@ -79,17 +87,42 @@ public class CourseService implements CacheHandler<Course>, CollectService<Cours
     }
 
     @Override
+    @Transactional(
+            isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED,
+            rollbackFor = {Exception.class, Throwable.class, RuntimeException.class}
+    )
     public CourseResponse create(CourseRequest request) {
-        return null;
+        Course course = courseMapper.courseRepository.save(courseMapper.toEntity(request));
+        handleCache(course);
+        CourseResponse courseResponse = courseMapper.toResponse(course);
+        String courseKey = String.format(RedisKeys.courseKey, courseResponse.getId());
+        courseRedisTemplate.opsForValue().set(courseKey, courseResponse);
+        return courseResponse;
     }
 
     @Override
+    @Transactional(
+            isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED,
+            rollbackFor = {Exception.class, Throwable.class, RuntimeException.class}
+    )
     public CourseResponse update(CourseRequest request) {
-        return null;
+        if (request.getId() == null) throw new IllegalArgumentException("Course request id is null");
+        Course course = courseMapper.courseRepository.save(courseMapper.toEntity(request));
+        handleCache(course);
+        String courseKey = String.format(RedisKeys.courseKey, course.getId());
+        CourseResponse courseResponse = courseMapper.toResponse(course);
+        courseRedisTemplate.opsForValue().set(courseKey, courseResponse);
+        return courseResponse;
     }
 
     @Override
+    @Transactional(
+            isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED,
+            rollbackFor = {Exception.class, Throwable.class, RuntimeException.class}
+    )
     public void delete(UUID uuid) {
-
+        Course course = findEntity(uuid);
+        courseMapper.courseRepository.delete(course);
+        handleCache(course);
     }
 }

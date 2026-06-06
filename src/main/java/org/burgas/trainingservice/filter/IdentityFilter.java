@@ -22,7 +22,8 @@ public class IdentityFilter implements HandlerFilterFunction<ServerResponse, Ser
     private final List<String> paramUrls = new ArrayList<>(List.of(
             "/api/v1/identities/by-id", "/api/v1/identities/delete",
             "/api/v1/identities/upload-image", "/api/v1/identities/remove-image",
-            "/api/v1/identities/upload-files", "/api/v1/identities/remove-files"
+            "/api/v1/identities/upload-files", "/api/v1/identities/remove-files",
+            "/api/v1/identities/add-course", "/api/v1/identities/remove-course"
     ));
 
     private final List<String> bodyUrls = new ArrayList<>(List.of(
