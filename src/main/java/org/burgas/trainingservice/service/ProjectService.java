@@ -1,7 +1,9 @@
 package org.burgas.trainingservice.service;
 
+import jakarta.servlet.http.Part;
 import lombok.RequiredArgsConstructor;
 import org.burgas.trainingservice.dao.course.Course;
+import org.burgas.trainingservice.dao.file.File;
 import org.burgas.trainingservice.dao.project.Project;
 import org.burgas.trainingservice.dto.course.CourseResponse;
 import org.burgas.trainingservice.dto.project.ProjectRequest;
@@ -27,6 +29,7 @@ public class ProjectService implements CacheHandler<Project>, FindService<UUID, 
         DesignService<UUID, ProjectRequest, ProjectResponse>, ModifyService<ProjectRequest, ProjectResponse> {
 
     private final ProjectMapper projectMapper;
+    private final FileServiceImpl fileService;
 
     private final RedisTemplate<String, ProjectResponse> projectRedisTemplate;
     private final RedisTemplate<String, CourseResponse> courseRedisTemplate;
@@ -99,5 +102,36 @@ public class ProjectService implements CacheHandler<Project>, FindService<UUID, 
         Project project = findEntity(uuid);
         projectMapper.projectRepository.delete(project);
         handleCache(project);
+    }
+
+    @Transactional(
+            isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED,
+            rollbackFor = {Exception.class, Throwable.class, RuntimeException.class}
+    )
+    public void addTask(UUID projectId, Part part) {
+        Project project = findEntity(projectId);
+        if (project.getTask() == null) {
+            File task = fileService.upload(part);
+            project.setTask(task);
+            handleCache(project);
+        } else {
+            throw new IllegalArgumentException("Project task already exists. To upload you need to delete old one");
+        }
+    }
+
+    @Transactional(
+            isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED,
+            rollbackFor = {Exception.class, Throwable.class, RuntimeException.class}
+    )
+    public void removeTask(UUID projectId) {
+        Project project = findEntity(projectId);
+        if (project.getTask() != null) {
+            File task = project.getTask();
+            project.setTask(null);
+            fileService.remove(task);
+            handleCache(project);
+        } else {
+            throw new IllegalArgumentException("Project task is empty already");
+        }
     }
 }

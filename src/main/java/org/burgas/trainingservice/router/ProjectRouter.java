@@ -1,5 +1,6 @@
 package org.burgas.trainingservice.router;
 
+import jakarta.servlet.http.Part;
 import org.burgas.trainingservice.dto.exception.ExceptionResponse;
 import org.burgas.trainingservice.dto.project.ProjectRequest;
 import org.burgas.trainingservice.dto.project.ProjectResponse;
@@ -52,6 +53,19 @@ public class ProjectRouter {
                             UUID projectId = UUID.fromString(request.param("projectId").orElseThrow());
                             projectService.delete(projectId);
                             return ServerResponse.noContent().build();
+                        })
+
+                        .PUT("/upload-task", request -> {
+                            UUID projectId = UUID.fromString(request.param("projectId").orElseThrow());
+                            Part part = request.multipartData().getFirst("task");
+                            projectService.addTask(projectId, part);
+                            return ServerResponse.ok().build();
+                        })
+
+                        .DELETE("/remove-task", request -> {
+                            UUID projectId = UUID.fromString(request.param("projectId").orElseThrow());
+                            projectService.removeTask(projectId);
+                            return ServerResponse.ok().build();
                         })
 
                         .onError(Exception.class, (throwable, _) -> {

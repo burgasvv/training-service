@@ -70,7 +70,8 @@ public class SecurityConfig {
 
                                 "/api/v1/courses/create", "/api/v1/courses/update", "/api/v1/courses/delete",
 
-                                "/api/v1/projects/create", "/api/v1/projects/update", "/api/v1/projects/delete"
+                                "/api/v1/projects/create", "/api/v1/projects/update", "/api/v1/projects/delete",
+                                "/api/v1/projects/upload-task", "/api/v1/projects/remove-task"
                         )
                         .hasAnyAuthority("ADMIN")
                 )

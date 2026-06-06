@@ -1,4 +1,6 @@
 
+@file:Suppress("AvoidDuplicateDependencies")
+
 plugins {
     java
     id("org.springframework.boot") version "4.0.6"
