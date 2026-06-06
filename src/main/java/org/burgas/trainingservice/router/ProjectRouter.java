@@ -1,9 +1,9 @@
 package org.burgas.trainingservice.router;
 
-import org.burgas.trainingservice.dto.course.CourseRequest;
-import org.burgas.trainingservice.dto.course.CourseResponse;
 import org.burgas.trainingservice.dto.exception.ExceptionResponse;
-import org.burgas.trainingservice.service.CourseService;
+import org.burgas.trainingservice.dto.project.ProjectRequest;
+import org.burgas.trainingservice.dto.project.ProjectResponse;
+import org.burgas.trainingservice.service.ProjectService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -15,41 +15,39 @@ import java.net.URI;
 import java.util.UUID;
 
 @Configuration
-public class CourseRouter {
+public class ProjectRouter {
 
     @Bean
-    public RouterFunction<ServerResponse> courseRouting(CourseService courseService) {
+    public RouterFunction<ServerResponse> projectRouting(ProjectService projectService) {
         return RouterFunctions.route()
-                .path("/api/v1/courses", builder -> builder
-
-                        .GET("", _ -> ServerResponse.ok().body(courseService.findAll()))
+                .path("/api/v1/projects", builder -> builder
 
                         .GET("/by-id", request -> {
-                            UUID courseId = UUID.fromString(request.param("courseId").orElseThrow());
-                            return ServerResponse.ok().body(courseService.findById(courseId));
+                            UUID projectId = UUID.fromString(request.param("projectId").orElseThrow());
+                            return ServerResponse.ok().body(projectService.findById(projectId));
                         })
 
                         .POST("/create", request -> {
-                            CourseRequest courseRequest = request.body(CourseRequest.class);
-                            CourseResponse courseResponse = courseService.create(courseRequest);
+                            ProjectRequest projectRequest = request.body(ProjectRequest.class);
+                            ProjectResponse projectResponse = projectService.create(projectRequest);
                             return ServerResponse
                                     .status(HttpStatus.FOUND)
-                                    .location(URI.create("/api/v1/courses/by-id?courseId=" + courseResponse.getId()))
+                                    .location(URI.create("/api/v1/projects/by-id?projectId=" + projectResponse.getId()))
                                     .build();
                         })
 
                         .POST("/update", request -> {
-                            CourseRequest courseRequest = request.body(CourseRequest.class);
-                            CourseResponse courseResponse = courseService.update(courseRequest);
+                            ProjectRequest projectRequest = request.body(ProjectRequest.class);
+                            ProjectResponse projectResponse = projectService.update(projectRequest);
                             return ServerResponse
                                     .status(HttpStatus.FOUND)
-                                    .location(URI.create("/api/v1/courses/by-id?courseId=" + courseResponse.getId()))
+                                    .location(URI.create("/api/v1/projects/by-id?projectId=" + projectResponse.getId()))
                                     .build();
                         })
 
                         .DELETE("/delete", request -> {
-                            UUID courseId = UUID.fromString(request.param("courseId").orElseThrow());
-                            courseService.delete(courseId);
+                            UUID projectId = UUID.fromString(request.param("projectId").orElseThrow());
+                            projectService.delete(projectId);
                             return ServerResponse.noContent().build();
                         })
 
