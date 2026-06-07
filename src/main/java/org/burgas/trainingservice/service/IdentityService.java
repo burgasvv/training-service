@@ -121,6 +121,7 @@ public class IdentityService implements CacheHandler<Identity>,  FindService<UUI
     )
     public void delete(UUID uuid) {
         Identity identity = findEntity(uuid);
+        identity.getFiles().forEach(fileService::remove);
         identityMapper.identityRepository.delete(identity);
         handleCache(identity);
     }
