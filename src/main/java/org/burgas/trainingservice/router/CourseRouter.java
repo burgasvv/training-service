@@ -3,6 +3,8 @@ package org.burgas.trainingservice.router;
 import org.burgas.trainingservice.dto.course.CourseRequest;
 import org.burgas.trainingservice.dto.course.CourseResponse;
 import org.burgas.trainingservice.dto.exception.ExceptionResponse;
+import org.burgas.trainingservice.handler.CourseHandler;
+import org.burgas.trainingservice.handler.ExceptionHandler;
 import org.burgas.trainingservice.service.CourseService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,49 +20,15 @@ import java.util.UUID;
 public class CourseRouter {
 
     @Bean
-    public RouterFunction<ServerResponse> courseRouting(CourseService courseService) {
+    public RouterFunction<ServerResponse> courseRouting(CourseHandler courseHandler, ExceptionHandler exceptionHandler) {
         return RouterFunctions.route()
                 .path("/api/v1/courses", builder -> builder
-
-                        .GET("", _ -> ServerResponse.ok().body(courseService.findAll()))
-
-                        .GET("/by-id", request -> {
-                            UUID courseId = UUID.fromString(request.param("courseId").orElseThrow());
-                            return ServerResponse.ok().body(courseService.findById(courseId));
-                        })
-
-                        .POST("/create", request -> {
-                            CourseRequest courseRequest = request.body(CourseRequest.class);
-                            CourseResponse courseResponse = courseService.create(courseRequest);
-                            return ServerResponse
-                                    .status(HttpStatus.FOUND)
-                                    .location(URI.create("/api/v1/courses/by-id?courseId=" + courseResponse.getId()))
-                                    .build();
-                        })
-
-                        .POST("/update", request -> {
-                            CourseRequest courseRequest = request.body(CourseRequest.class);
-                            CourseResponse courseResponse = courseService.update(courseRequest);
-                            return ServerResponse
-                                    .status(HttpStatus.FOUND)
-                                    .location(URI.create("/api/v1/courses/by-id?courseId=" + courseResponse.getId()))
-                                    .build();
-                        })
-
-                        .DELETE("/delete", request -> {
-                            UUID courseId = UUID.fromString(request.param("courseId").orElseThrow());
-                            courseService.delete(courseId);
-                            return ServerResponse.noContent().build();
-                        })
-
-                        .onError(Exception.class, (throwable, _) -> {
-                            var exceptionResponse = ExceptionResponse.builder()
-                                    .status(HttpStatus.BAD_REQUEST.name())
-                                    .code(HttpStatus.BAD_REQUEST.value())
-                                    .message(throwable.getLocalizedMessage())
-                                    .build();
-                            return ServerResponse.badRequest().body(exceptionResponse);
-                        })
+                        .GET("", courseHandler::getAllCourses)
+                        .GET("/by-id", courseHandler::getCourseById)
+                        .POST("/create", courseHandler::createCourse)
+                        .POST("/update", courseHandler::updateCourse)
+                        .DELETE("/delete", courseHandler::deleteCourse)
+                        .onError(Throwable.class, exceptionHandler::throwException)
                         .build()
                 ).build();
     }

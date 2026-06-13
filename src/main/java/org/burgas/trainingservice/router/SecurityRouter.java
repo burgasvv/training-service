@@ -1,14 +1,10 @@
 package org.burgas.trainingservice.router;
 
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.burgas.trainingservice.dto.exception.ExceptionResponse;
+import org.burgas.trainingservice.handler.ExceptionHandler;
+import org.burgas.trainingservice.handler.SecurityHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.servlet.function.RouterFunction;
 import org.springframework.web.servlet.function.RouterFunctions;
 import org.springframework.web.servlet.function.ServerResponse;
@@ -18,48 +14,14 @@ import org.springframework.web.servlet.function.ServerResponse;
 public class SecurityRouter {
 
     @Bean
-    public RouterFunction<ServerResponse> securityRouting() {
+    public RouterFunction<ServerResponse> securityRouting(SecurityHandler securityHandler, ExceptionHandler exceptionHandler) {
         return RouterFunctions.route()
                 .path("/api/v1/security", builder -> builder
-
-                        .GET("/csrf-token", request -> {
-                            CsrfToken csrfToken = (CsrfToken) request.attribute("_csrf").orElseThrow();
-                            return ServerResponse.ok().body(csrfToken);
-                        })
-
-                        .GET("/login", _ -> {
-                            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-                            assert authentication != null;
-                            if (authentication.isAuthenticated()) {
-                                return ServerResponse.ok().body("You successfully logged in");
-                            } else {
-                                throw new IllegalArgumentException("Not authenticated");
-                            }
-                        })
-
-                        .GET("/logout", request -> {
-                            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-                            assert authentication != null;
-                            if (authentication.isAuthenticated()) {
-                                SecurityContextHolder.clearContext();
-                                HttpSession session = request.session();
-                                session.removeAttribute("SPRING_SECURITY_CONTEXT");
-                                return ServerResponse.ok().body("You successfully logged out");
-                            } else {
-                                throw new IllegalArgumentException("You are not authenticated for logout");
-                            }
-                        })
-
-                        .onError(Exception.class, (throwable, _) -> {
-                            var exceptionResponse = ExceptionResponse.builder()
-                                    .status(HttpStatus.BAD_REQUEST.name())
-                                    .code(HttpStatus.BAD_REQUEST.value())
-                                    .message(throwable.getLocalizedMessage())
-                                    .build();
-                            return ServerResponse.badRequest().body(exceptionResponse);
-                        })
+                        .GET("/csrf-token", securityHandler::getCsrfToken)
+                        .GET("/login", securityHandler::login)
+                        .GET("/logout", securityHandler::logout)
+                        .onError(Exception.class, exceptionHandler::throwException)
                         .build()
-
                 ).build();
     }
 }

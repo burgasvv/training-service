@@ -1,81 +1,31 @@
 package org.burgas.trainingservice.router;
 
-import jakarta.servlet.http.Part;
-import org.burgas.trainingservice.dto.exception.ExceptionResponse;
-import org.burgas.trainingservice.dto.project.ProjectRequest;
-import org.burgas.trainingservice.dto.project.ProjectResponse;
 import org.burgas.trainingservice.filter.ProjectFilter;
-import org.burgas.trainingservice.service.ProjectService;
+import org.burgas.trainingservice.handler.ExceptionHandler;
+import org.burgas.trainingservice.handler.ProjectHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.function.RouterFunction;
 import org.springframework.web.servlet.function.RouterFunctions;
 import org.springframework.web.servlet.function.ServerResponse;
-
-import java.net.URI;
-import java.util.UUID;
 
 @Configuration
 public class ProjectRouter {
 
     @Bean
-    public RouterFunction<ServerResponse> projectRouting(ProjectService projectService, ProjectFilter projectFilter) {
+    public RouterFunction<ServerResponse> projectRouting(
+            ProjectHandler projectHandler, ProjectFilter projectFilter, ExceptionHandler exceptionHandler
+    ) {
         return RouterFunctions.route()
                 .path("/api/v1/projects", builder -> builder
-
                         .filter(projectFilter)
-
-                        .GET("/by-id", request -> {
-                            UUID projectId = UUID.fromString(request.param("projectId").orElseThrow());
-                            return ServerResponse.ok().body(projectService.findById(projectId));
-                        })
-
-                        .POST("/create", request -> {
-                            ProjectRequest projectRequest = request.body(ProjectRequest.class);
-                            ProjectResponse projectResponse = projectService.create(projectRequest);
-                            return ServerResponse
-                                    .status(HttpStatus.FOUND)
-                                    .location(URI.create("/api/v1/projects/by-id?projectId=" + projectResponse.getId()))
-                                    .build();
-                        })
-
-                        .POST("/update", request -> {
-                            ProjectRequest projectRequest = request.body(ProjectRequest.class);
-                            ProjectResponse projectResponse = projectService.update(projectRequest);
-                            return ServerResponse
-                                    .status(HttpStatus.FOUND)
-                                    .location(URI.create("/api/v1/projects/by-id?projectId=" + projectResponse.getId()))
-                                    .build();
-                        })
-
-                        .DELETE("/delete", request -> {
-                            UUID projectId = UUID.fromString(request.param("projectId").orElseThrow());
-                            projectService.delete(projectId);
-                            return ServerResponse.noContent().build();
-                        })
-
-                        .PUT("/upload-task", request -> {
-                            UUID projectId = UUID.fromString(request.param("projectId").orElseThrow());
-                            Part part = request.multipartData().getFirst("task");
-                            projectService.addTask(projectId, part);
-                            return ServerResponse.ok().build();
-                        })
-
-                        .DELETE("/remove-task", request -> {
-                            UUID projectId = UUID.fromString(request.param("projectId").orElseThrow());
-                            projectService.removeTask(projectId);
-                            return ServerResponse.ok().build();
-                        })
-
-                        .onError(Exception.class, (throwable, _) -> {
-                            var exceptionResponse = ExceptionResponse.builder()
-                                    .status(HttpStatus.BAD_REQUEST.name())
-                                    .code(HttpStatus.BAD_REQUEST.value())
-                                    .message(throwable.getLocalizedMessage())
-                                    .build();
-                            return ServerResponse.badRequest().body(exceptionResponse);
-                        })
+                        .GET("/by-id", projectHandler::getProjectById)
+                        .POST("/create", projectHandler::createProject)
+                        .POST("/update", projectHandler::updateProject)
+                        .DELETE("/delete", projectHandler::deleteProject)
+                        .PUT("/upload-task", projectHandler::uploadTask)
+                        .DELETE("/remove-task", projectHandler::removeTask)
+                        .onError(Throwable.class, exceptionHandler::throwException)
                         .build()
                 ).build();
     }
