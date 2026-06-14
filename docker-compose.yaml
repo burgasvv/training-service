@@ -35,6 +35,7 @@ services:
     ports:
       - "9000:9000"
     environment:
+      PORT: 9000
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/training-service-db
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
