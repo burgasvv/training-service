@@ -235,6 +235,7 @@ public class IdentityService implements CacheHandler<Identity>,  FindService<UUI
         if (!identityCourseIds.contains(course.getId())) {
             identity.addCourse(course);
             handleCache(identity);
+            courseService.handleCache(course);
         } else {
             throw new IllegalArgumentException("Identity already subscribed on course");
         }
@@ -251,6 +252,7 @@ public class IdentityService implements CacheHandler<Identity>,  FindService<UUI
         if (identityCourseIds.contains(course.getId())) {
             identity.removeCourse(course);
             handleCache(identity);
+            courseService.handleCache(course);
         } else {
             throw new IllegalArgumentException("Identity not subscribed on course for remove");
         }

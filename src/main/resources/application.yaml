@@ -7,14 +7,9 @@ spring:
     name: training-service
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: 'jdbc:postgresql://localhost:5000/training-service-db'
-    username: postgres
-    password: postgres
-  liquibase:
-    driver-class-name: org.postgresql.Driver
-    url: 'jdbc:postgresql://localhost:5000/training-service-db'
-    user: postgres
-    password: postgres
+    url: ${SPRING_DATASOURSE_URL:jdbc:postgresql://localhost:5000/training-service-db}
+    username: ${SPRING_DATASOURSE_USERNAME:postgres}
+    password: ${SPRING_DATASOURSE_PASSWORD:postgres}
   jpa:
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -32,8 +27,8 @@ spring:
       max-request-size: 100000000000MB
   data:
     redis:
-      port: 6000
-      host: 'localhost'
+      port: ${REDIS_PORT:6000}
+      host: ${REDIS_HOST:localhost}
       database: 0
       lettuce:
         pool:

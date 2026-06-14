@@ -32,7 +32,7 @@ POST /api/v1/identities/create
 Host: localhost:9000
 Accept: application/json
 Content-Type: application/json
-X-Csrf-Token: 2wkOyNGfFWXklgVeodLduMuDMa0BWBN9QSi9ncICy4NoEbQO7zFq_uanIlXJpzM7lP_piK-0HJUyPHVQJR3Yr_Bn_bRZddA6
+X-Csrf-Token: xDvmruGoEI104LCwNjmwEz-4AIyfDGV8vqIJ26OLpY4tWmKM_FiDmtKdIuxZ0YKJUxSEJwjdLbX5OlNRipcx6pG9wLcVb1vp
 
 {
     "authority": "ADMIN",
@@ -81,7 +81,7 @@ Host: localhost:9000
 Accept: application/json
 
 ###
-GET /api/v1/identities/by-id?identityId=765b8d61-8299-4a54-8b59-fe21b6ce7532
+GET /api/v1/identities/by-id?identityId=c3f4eefd-44bc-4ece-9ec8-58c257606565
 Host: localhost:9000
 Accept: application/json
 
