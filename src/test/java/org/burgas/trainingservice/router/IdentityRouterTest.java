@@ -13,12 +13,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.mock.web.MockPart;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import tools.jackson.databind.ObjectMapper;
+
+import java.nio.charset.StandardCharsets;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -125,6 +128,46 @@ public class IdentityRouterTest {
 
     @Test
     @Order(value = 5)
+    public void uploadIdentityImage() throws Exception {
+        MvcResult loginResult = getLogin();
+        MockHttpSession httpSession = (MockHttpSession) loginResult.getRequest().getSession();
+        assert httpSession != null;
+        Identity identity = identityRepository.findIdentityByEmail("admin@gmail.com").orElseThrow();
+        MockPart testImage = new MockPart(
+                "image", "image.jpg",
+                "test image bytes".getBytes(StandardCharsets.UTF_8),
+                MediaType.IMAGE_JPEG
+        );
+        mockMvc.perform(
+                        MockMvcRequestBuilders.multipart("/api/v1/identities/upload-image")
+                                .param("identityId", identity.getId().toString())
+                                .part(testImage)
+                                .session(httpSession)
+                                .with(SecurityMockMvcRequestPostProcessors.csrf())
+                )
+                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
+                .andReturn();
+    }
+
+    @Test
+    @Order(value = 6)
+    public void removeIdentityImage() throws Exception {
+        MvcResult loginResult = getLogin();
+        MockHttpSession httpSession = (MockHttpSession) loginResult.getRequest().getSession();
+        assert httpSession != null;
+        Identity identity = identityRepository.findIdentityByEmail("admin@gmail.com").orElseThrow();
+        mockMvc.perform(
+                        MockMvcRequestBuilders.delete("/api/v1/identities/remove-image")
+                                .param("identityId", identity.getId().toString())
+                                .session(httpSession)
+                                .with(SecurityMockMvcRequestPostProcessors.csrf())
+                )
+                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
+                .andReturn();
+    }
+
+    @Test
+    @Order(value = 7)
     public void deleteIdentity() throws Exception {
         MvcResult loginResult = getLogin();
         MockHttpSession httpSession = (MockHttpSession) loginResult.getRequest().getSession();
