@@ -25,7 +25,7 @@ public class IdentityRouter {
                         .GET("/by-id", identityHandler::getIdentityById)
                         .POST("/create", identityHandler::createIdentity)
                         .POST("/update", identityHandler::updateIdentity)
-                        .DELETE("/delete", identityHandler::deleteIdentity)
+                        .POST("/delete", identityHandler::deleteIdentity)
                         .POST("/upload-image", identityHandler::uploadImage)
                         .DELETE("/remove-image", identityHandler::removeImage)
                         .POST("/upload-files", identityHandler::uploadFiles)
