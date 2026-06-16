@@ -1,7 +1,9 @@
 package org.burgas.trainingservice.router;
 
+import org.burgas.trainingservice.dao.file.File;
 import org.burgas.trainingservice.dao.identity.Authority;
 import org.burgas.trainingservice.dao.identity.Identity;
+import org.burgas.trainingservice.dto.file.FileRequest;
 import org.burgas.trainingservice.dto.identity.IdentityRequest;
 import org.burgas.trainingservice.repository.IdentityRepository;
 import org.junit.jupiter.api.MethodOrderer;
@@ -22,6 +24,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import tools.jackson.databind.ObjectMapper;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -168,6 +173,52 @@ public class IdentityRouterTest {
 
     @Test
     @Order(value = 7)
+    public void uploadIdentityFiles() throws Exception {
+        MvcResult loginResult = getLogin();
+        MockHttpSession httpSession = (MockHttpSession) loginResult.getRequest().getSession();
+        assert httpSession != null;
+        Identity identity = identityRepository.findIdentityByEmail("admin@gmail.com").orElseThrow();
+        MockPart firstFile = new MockPart(
+                "file", "file.txt",
+                "test first file bytes".getBytes(StandardCharsets.UTF_8),
+                MediaType.APPLICATION_OCTET_STREAM
+        );
+        mockMvc.perform(
+                        MockMvcRequestBuilders.multipart("/api/v1/identities/upload-files")
+                                .param("identityId", identity.getId().toString())
+                                .part(firstFile)
+                                .session(httpSession)
+                                .with(SecurityMockMvcRequestPostProcessors.csrf())
+                )
+                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
+                .andReturn();
+    }
+
+    @Test
+    @Order(value = 8)
+    public void removeIdentityFiles() throws Exception {
+        MvcResult loginResult = getLogin();
+        MockHttpSession httpSession = (MockHttpSession) loginResult.getRequest().getSession();
+        assert httpSession != null;
+        Identity identity = identityRepository.findIdentityByEmail("admin@gmail.com").orElseThrow();
+        Set<UUID> fileIds = identity.getFiles().parallelStream().map(File::getId).collect(Collectors.toSet());
+        var fileRequest = new FileRequest(fileIds);
+        var mapper = new ObjectMapper();
+        String content = mapper.writeValueAsString(fileRequest);
+        mockMvc.perform(
+                        MockMvcRequestBuilders.delete("/api/v1/identities/remove-files")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .param("identityId", identity.getId().toString())
+                                .content(content)
+                                .session(httpSession)
+                                .with(SecurityMockMvcRequestPostProcessors.csrf())
+                )
+                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
+                .andReturn();
+    }
+
+    @Test
+    @Order(value = 9)
     public void deleteIdentity() throws Exception {
         MvcResult loginResult = getLogin();
         MockHttpSession httpSession = (MockHttpSession) loginResult.getRequest().getSession();

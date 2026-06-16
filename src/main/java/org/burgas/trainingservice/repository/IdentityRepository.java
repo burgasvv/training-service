@@ -21,5 +21,6 @@ public interface IdentityRepository extends JpaRepository<Identity, UUID> {
     @EntityGraph(value = "identity-entity-graph", type = EntityGraph.EntityGraphType.FETCH)
     @NonNull List<Identity> findAll();
 
+    @EntityGraph(value = "identity-entity-graph", type = EntityGraph.EntityGraphType.FETCH)
     Optional<Identity> findIdentityByEmail(String email);
 }
