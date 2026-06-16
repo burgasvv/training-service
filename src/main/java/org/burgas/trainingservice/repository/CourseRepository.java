@@ -20,4 +20,6 @@ public interface CourseRepository extends JpaRepository<Course, UUID> {
     @Override
     @EntityGraph(value = "course-entity-graph", type = EntityGraph.EntityGraphType.FETCH)
     @NonNull List<Course> findAll();
+
+    Optional<Course> findCourseByName(String name);
 }

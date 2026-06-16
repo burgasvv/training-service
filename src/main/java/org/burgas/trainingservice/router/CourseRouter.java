@@ -1,20 +1,12 @@
 package org.burgas.trainingservice.router;
 
-import org.burgas.trainingservice.dto.course.CourseRequest;
-import org.burgas.trainingservice.dto.course.CourseResponse;
-import org.burgas.trainingservice.dto.exception.ExceptionResponse;
 import org.burgas.trainingservice.handler.CourseHandler;
 import org.burgas.trainingservice.handler.ExceptionHandler;
-import org.burgas.trainingservice.service.CourseService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.function.RouterFunction;
 import org.springframework.web.servlet.function.RouterFunctions;
 import org.springframework.web.servlet.function.ServerResponse;
-
-import java.net.URI;
-import java.util.UUID;
 
 @Configuration
 public class CourseRouter {
