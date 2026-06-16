@@ -21,5 +21,6 @@ public interface CourseRepository extends JpaRepository<Course, UUID> {
     @EntityGraph(value = "course-entity-graph", type = EntityGraph.EntityGraphType.FETCH)
     @NonNull List<Course> findAll();
 
+    @EntityGraph(value = "course-entity-graph", type = EntityGraph.EntityGraphType.FETCH)
     Optional<Course> findCourseByName(String name);
 }

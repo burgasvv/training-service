@@ -20,4 +20,7 @@ public interface ProjectRepository extends JpaRepository<Project, UUID> {
     @Override
     @EntityGraph(value = "project-entity-graph", type = EntityGraph.EntityGraphType.FETCH)
     @NonNull List<Project> findAll();
+
+    @EntityGraph(value = "project-entity-graph", type = EntityGraph.EntityGraphType.FETCH)
+    Optional<Project> findProjectByName(String name);
 }
